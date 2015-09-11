@@ -43,7 +43,6 @@ void loop() {
   int sensorValue = analogRead(A0);
   //controls amount of light and speed
   blinkScale = sensorValue/25;
-
   // reads button signal
   buttonState = digitalRead(buttonPin);
   // if button state is the same as before, ignore
@@ -64,11 +63,9 @@ void loop() {
   }
   // resets button state
   lastButtonState = buttonState;
-  
-    // executes all lights on function
+   // executes all lights on function
   if (lightState == 1) {
     writeAllLights(HIGH);
-
   }
   // executes blink lights function
   if (lightState == 2) {
@@ -78,8 +75,8 @@ void loop() {
   if (lightState == 3) {
     bounceLights(2000/blinkScale);
   }
-  
 }
+
 // blink light function
 void blinkLights(double interval) {
   // keeps track of current time through millis function
@@ -89,16 +86,19 @@ void blinkLights(double interval) {
       //if so, changes the recorded previous time value
       prevMillis = currMillis;
       // checks state and changes it to the other one
-      if (state == LOW)
+      if (state == LOW) {
         state = HIGH;
-      else
+      }
+      else {
         state = LOW;
+      }
       // does it for each led
       for (int i = 0; i < (sizeof(allLeds)/sizeof(int)); i++) {
         writeLight(allLeds[i], state);
       }
     }
 }
+
 // bounce lights function
 void bounceLights(double interval) {
  // keeps track of current time through millis function
@@ -138,6 +138,7 @@ void bounceLights(double interval) {
    }
   }
 }
+
 // function that writes all the lights
 void writeAllLights(int tempState) {
   //goes through each light
@@ -152,6 +153,7 @@ void writeAllLights(int tempState) {
     }
   }
 }
+
 // writes only one light at a time, but same as above
 void writeLight(int led, int tempState) {
   if (tempState == LOW) {
