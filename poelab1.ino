@@ -14,15 +14,16 @@ int buttonState = 0;
 int lastButtonState = 0;
 int lightState = 0;
 
+//variables to set up for flashing and bouncing
 long prevMillis = 0;
 int state = HIGH;
-
 int litLed = 1;
-int ledTranslate = led2 - 1;
 boolean bounceReverse = true;
+//will translate 1-
+int ledTranslate = led2 - 1;
 
 double blinkScale = 0;
-int lightMin = 50;
+int lightMin = 20;
 
 //initializes pins
 void setup() {
@@ -53,12 +54,11 @@ void loop() {
       lightState = (lightState + 1) % numStates;
       //turns off all lights so next step can happen
       writeAllLights(LOW);
-      // prints the light states
+      // prints the light states for debugging
       Serial.println(lightState);
-      // ??
+      // resetting the states for flash and bounce mode
       litLed = 1;
       state = HIGH;
-      //enacts bounce reverse mode
       bounceReverse = true;
     }
   }
@@ -107,11 +107,11 @@ void bounceLights(double interval) {
  if (currMillis - prevMillis > interval) {
    //if so, changes the recorded previous time value
    prevMillis = currMillis;
-   //check if led 1 is on
+   //led1 is on pin 6 which must be handled separately
    if (litLed == 0) {
-    //turn off that led
      writeLight(led1, LOW);
    }
+   //otherwise turn off appropriate led
    else {
      writeLight(litLed + ledTranslate, LOW);
    }
@@ -128,15 +128,15 @@ void bounceLights(double interval) {
    if (litLed % (numLeds-1) == 0) {
      bounceReverse = !bounceReverse;
    }
-   //if no leds lit, light the first one
+   //handling led1 separately
    if (litLed == 0) {
      writeLight(led1, HIGH);
    }
-   // if a light is on then it lights it lights the next light
+   //otherwise light appropriate led
    else {
      writeLight(litLed + ledTranslate, HIGH);
    }
- }
+  }
 }
 // function that writes all the lights
 void writeAllLights(int tempState) {
